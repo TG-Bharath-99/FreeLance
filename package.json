@@ -1,0 +1,13 @@
+{
+  "name": "freelance-marketplace",
+  "version": "1.0.0",
+  "description": "Freelance Marketplace - Root package for Render deployment",
+  "scripts": {
+    "start": "node backend/server.js",
+    "build": "cd backend && npm install",
+    "install-backend": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
