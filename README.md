@@ -62,7 +62,7 @@ Chat       Status Updated
 Payment Workflow (UI)
 🚀 Getting Started
 Clone the Repository
-git clone https://github.com/TG-Bharath-99/freelance-online.git
+git clone https://github.com/TG-Bharath-99/FreeLance.git
 Install Dependencies
 
 Frontend
