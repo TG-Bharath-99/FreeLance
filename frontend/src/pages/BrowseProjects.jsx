@@ -9,6 +9,7 @@ import { CardSkeleton } from '../components/Skeleton';
 import EmptyState from '../components/EmptyState';
 import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { getFileUrl } from '../utils/helpers';
 
 const BrowseProjects = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -318,7 +319,7 @@ const BrowseProjects = () => {
                       <div className="flex items-center gap-2.5">
                         <div className="h-7 w-7 rounded-full overflow-hidden bg-gradient-to-tr from-primary-500 to-indigo-500 flex items-center justify-center text-[10px] text-white font-bold shadow-sm">
                           {proj.client?.profileImage ? (
-                            <img src={proj.client.profileImage.startsWith('http') ? proj.client.profileImage : `http://localhost:5000${proj.client.profileImage}`} alt={proj.client.name} className="h-full w-full object-cover" />
+                            <img src={getFileUrl(proj.client.profileImage)} alt={proj.client.name} className="h-full w-full object-cover" />
                           ) : (
                             proj.client?.name.charAt(0).toUpperCase()
                           )}

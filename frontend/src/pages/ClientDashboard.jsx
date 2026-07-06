@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { StatsSkeleton } from '../components/Skeleton';
 import EmptyState from '../components/EmptyState';
 import { toast } from 'react-hot-toast';
+import { getFileUrl } from '../utils/helpers';
 
 const ClientDashboard = () => {
   const { user } = useAuth();
@@ -219,11 +220,13 @@ const ClientDashboard = () => {
               <div className="space-y-4">
                 {stats.recentActivity.map((act) => (
                   <div key={act._id} className="flex items-start gap-3 text-sm">
-                    <div className="h-8 w-8 rounded-full overflow-hidden bg-gradient-to-tr from-primary-500 to-indigo-500 flex items-center justify-center text-xs text-white font-bold flex-shrink-0 mt-0.5 shadow-sm">
-                      {act.freelancer.profileImage ? (
-                        <img src={act.freelancer.profileImage.startsWith('http') ? act.freelancer.profileImage : `http://localhost:5000${act.freelancer.profileImage}`} alt={act.freelancer.name} className="h-full w-full object-cover" />
+                    <div className="h-8 w-8 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700">
+                      {act.freelancer?.profileImage ? (
+                        <img src={getFileUrl(act.freelancer.profileImage)} alt={act.freelancer.name} className="h-full w-full object-cover" />
                       ) : (
-                        act.freelancer.name.charAt(0).toUpperCase()
+                        <div className="h-full w-full flex items-center justify-center text-xs font-bold text-slate-500 dark:text-slate-400">
+                          {act.freelancer?.name?.charAt(0) || 'U'}
+                        </div>
                       )}
                     </div>
                     <div className="space-y-1 min-w-0 flex-grow">

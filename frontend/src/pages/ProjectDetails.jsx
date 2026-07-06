@@ -10,6 +10,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import EmptyState from '../components/EmptyState';
+import { getFileUrl } from '../utils/helpers';
 
 const ProjectDetails = () => {
   const { id } = useParams();
@@ -291,7 +292,7 @@ const ProjectDetails = () => {
                         <div className="flex gap-3">
                           <div className="h-11 w-11 rounded-full overflow-hidden bg-gradient-to-tr from-primary-500 to-indigo-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
                             {app.freelancer.profileImage ? (
-                              <img src={app.freelancer.profileImage.startsWith('http') ? app.freelancer.profileImage : `http://localhost:5000${app.freelancer.profileImage}`} alt={app.freelancer.name} className="h-full w-full object-cover" />
+                              <img src={getFileUrl(app.freelancer.profileImage)} alt={app.freelancer.name} className="h-full w-full object-cover" />
                             ) : (
                               app.freelancer.name.charAt(0).toUpperCase()
                             )}
@@ -320,9 +321,9 @@ const ProjectDetails = () => {
                           <span>Bid: <strong className="text-slate-800 dark:text-slate-200">${app.expectedBudget} USD</strong></span>
                           <span>Delivery: <strong className="text-slate-800 dark:text-slate-200">{app.estimatedDeliveryTime} days</strong></span>
                         </div>
-                        {app.resumeUrl && (
+                        {app.resumeUrl ? (
                           <a
-                            href={app.resumeUrl.startsWith('http') ? app.resumeUrl : `http://localhost:5000${app.resumeUrl}`}
+                            href={getFileUrl(app.resumeUrl)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1.5 font-bold text-primary-600 dark:text-primary-400 hover:underline"
@@ -331,6 +332,11 @@ const ProjectDetails = () => {
                             View Resume
                             <ExternalLink className="h-3.5 w-3.5" />
                           </a>
+                        ) : (
+                          <span className="text-slate-400 dark:text-slate-500 italic flex items-center gap-1.5">
+                            <FileText className="h-3.5 w-3.5" />
+                            Resume not uploaded.
+                          </span>
                         )}
                       </div>
 

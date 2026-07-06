@@ -17,6 +17,29 @@ const publicRoutes = require('./routes/publicRoutes');
 // Connect to Database
 connectDB();
 
+// Temporary script to clean fake projects left in database
+const clearFakeProjects = async () => {
+  try {
+    const Project = require('./models/Project');
+    const result = await Project.deleteMany({
+      $or: [
+        { title: { $regex: /fix project/i } },
+        { title: { $regex: /debug project/i } },
+        { title: { $regex: /e2e project/i } },
+        { title: { $regex: /demo/i } },
+        { title: { $regex: /test/i } },
+        { title: { $regex: /sample/i } }
+      ]
+    });
+    if (result.deletedCount > 0) {
+      console.log(`Deleted ${result.deletedCount} fake projects.`);
+    }
+  } catch (error) {
+    console.error('Error cleaning fake projects', error);
+  }
+};
+clearFakeProjects();
+
 const app = express();
 
 // Middlewares

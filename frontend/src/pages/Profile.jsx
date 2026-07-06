@@ -8,6 +8,7 @@ import {
   Users, FileText, Plus, Trash, Upload, Loader2, Award, Building2, Sparkles
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getFileUrl } from '../utils/helpers';
 
 const Profile = () => {
   const { user, updateProfile } = useAuth();
@@ -134,7 +135,7 @@ const Profile = () => {
             {avatarPreview ? (
               <img src={avatarPreview} alt={user.name} className="h-full w-full object-cover" />
             ) : user.profileImage ? (
-              <img src={user.profileImage.startsWith('http') ? user.profileImage : `http://localhost:5000${user.profileImage}`} alt={user.name} className="h-full w-full object-cover" />
+              <img src={getFileUrl(user.profileImage)} alt={user.name} className="h-full w-full object-cover" />
             ) : (
               user.name.charAt(0).toUpperCase()
             )}
@@ -324,15 +325,19 @@ const Profile = () => {
                       <span className="text-xs font-bold">{resumeFile ? resumeFile.name : 'Choose resume file (PDF)'}</span>
                       <input type="file" onChange={handleResumeChange} accept=".pdf,.doc,.docx" className="hidden" />
                     </label>
-                    {user.resumeUrl && (
+                    {user.resumeUrl ? (
                       <a
-                        href={user.resumeUrl.startsWith('http') ? user.resumeUrl : `http://localhost:5000${user.resumeUrl}`}
+                        href={getFileUrl(user.resumeUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline"
                       >
                         <FileText className="h-4 w-4" /> View active Resume
                       </a>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 dark:text-slate-500 italic">
+                        <FileText className="h-4 w-4" /> Resume not uploaded
+                      </span>
                     )}
                   </div>
                 </div>

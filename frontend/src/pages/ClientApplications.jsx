@@ -6,6 +6,7 @@ import api from '../services/api';
 import { toast } from 'react-hot-toast';
 import EmptyState from '../components/EmptyState';
 import { StatsSkeleton } from '../components/Skeleton';
+import { getFileUrl } from '../utils/helpers';
 
 const ClientApplications = () => {
   const { projectId } = useParams();
@@ -87,7 +88,7 @@ const ClientApplications = () => {
               <div className="flex-shrink-0 flex flex-col items-center md:items-start w-full md:w-64 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800 pb-6 md:pb-0 md:pr-6">
                 <div className="h-20 w-20 rounded-full bg-gradient-to-tr from-primary-500 to-indigo-500 flex items-center justify-center text-2xl text-white font-bold overflow-hidden mb-3 shadow-md">
                   {app.freelancer.profileImage ? (
-                    <img src={app.freelancer.profileImage.startsWith('http') ? app.freelancer.profileImage : `http://localhost:5000${app.freelancer.profileImage}`} alt={app.freelancer.name} className="h-full w-full object-cover" />
+                    <img src={getFileUrl(app.freelancer.profileImage)} alt={app.freelancer.name} className="h-full w-full object-cover" />
                   ) : (
                     app.freelancer.name.charAt(0).toUpperCase()
                   )}

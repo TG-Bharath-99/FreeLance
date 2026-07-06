@@ -101,3 +101,36 @@ exports.getContacts = async (req, res) => {
     res.status(500).json({ message: 'Server error retrieving contacts', error: error.message });
   }
 };
+
+// @desc    Get unread message count
+// @route   GET /api/messages/unread-count
+// @access  Private
+exports.getUnreadCount = async (req, res) => {
+  try {
+    const unreadCount = await Message.countDocuments({
+      receiver: req.user.id,
+      read: false
+    });
+    res.json({ unreadCount });
+  } catch (error) {
+    console.error('Get Unread Count Error:', error);
+    res.status(500).json({ message: 'Server error retrieving unread count', error: error.message });
+  }
+};
+
+// @desc    Mark messages as read from a specific sender
+// @route   PATCH /api/messages/mark-read/:senderId
+// @access  Private
+exports.markRead = async (req, res) => {
+  try {
+    const { senderId } = req.params;
+    await Message.updateMany(
+      { sender: senderId, receiver: req.user.id, read: false },
+      { $set: { read: true } }
+    );
+    res.json({ message: 'Messages marked as read' });
+  } catch (error) {
+    console.error('Mark Read Error:', error);
+    res.status(500).json({ message: 'Server error marking messages as read', error: error.message });
+  }
+};

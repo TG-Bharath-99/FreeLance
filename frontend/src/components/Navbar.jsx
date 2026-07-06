@@ -1,17 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Sun, Moon, Menu, X, Briefcase, User, LogOut, ChevronDown, PlusCircle, Sparkles } from 'lucide-react';
+import { Sun, Moon, Menu, X, Briefcase, User, LogOut, ChevronDown, PlusCircle, Sparkles, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import api from '../services/api';
+
+import { getFileUrl } from '../utils/helpers';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
   const { darkMode, toggleDarkMode } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const fetchUnread = async () => {
+      try {
+        const res = await api.get('/messages/unread-count');
+        setUnreadCount(res.data.unreadCount || 0);
+      } catch (err) {
+        console.error('Failed to fetch unread messages', err);
+      }
+    };
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 10000);
+    return () => clearInterval(interval);
+  }, [isAuthenticated]);
 
   const handleLogout = () => {
     logout();
@@ -105,6 +124,17 @@ const Navbar = () => {
               {darkMode ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
             </motion.button>
 
+            {isAuthenticated && (
+              <Link to="/chat" className="relative p-2.5 rounded-xl text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 hover:bg-slate-100/60 dark:hover:bg-slate-800/40 transition-all">
+                <MessageCircle className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-white dark:border-slate-900">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </Link>
+            )}
+
             {isAuthenticated ? (
               /* User Dropdown */
               <div className="relative">
@@ -115,7 +145,7 @@ const Navbar = () => {
                   <div className="h-8 w-8 rounded-full overflow-hidden ring-2 ring-primary-500/30 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 bg-gradient-to-tr from-primary-500 to-indigo-500 flex items-center justify-center text-white font-bold text-xs shadow-sm">
                     {user.profileImage ? (
                       <img
-                        src={user.profileImage.startsWith('http') ? user.profileImage : `http://localhost:5000${user.profileImage}`}
+                        src={getFileUrl(user.profileImage)}
                         alt={user.name}
                         className="h-full w-full object-cover"
                         onError={(e) => {

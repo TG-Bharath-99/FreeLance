@@ -5,6 +5,7 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { getFileUrl } from '../utils/helpers';
 
 const Chat = () => {
   const { id } = useParams(); // ID of the user we're chatting with
@@ -30,6 +31,9 @@ const Chat = () => {
         const userRes = await api.get(`/users/${id}`);
         setChatPartner(userRes.data);
       }
+      
+      // Mark messages as read
+      await api.patch(`/messages/mark-read/${id}`);
     } catch (err) {
       console.error(err);
       toast.error('Failed to load messages');
@@ -78,7 +82,7 @@ const Chat = () => {
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-primary-500 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md overflow-hidden">
               {chatPartner?.profileImage ? (
-                 <img src={chatPartner.profileImage.startsWith('http') ? chatPartner.profileImage : `http://localhost:5000${chatPartner.profileImage}`} alt={chatPartner.name} className="h-full w-full object-cover" />
+                 <img src={getFileUrl(chatPartner.profileImage)} alt={chatPartner.name} className="h-full w-full object-cover" />
               ) : (
                 chatPartner?.name?.charAt(0) || <User className="h-5 w-5" />
               )}
