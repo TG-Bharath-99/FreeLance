@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
   const allowedExtensions = ['.png', '.jpg', '.jpeg', '.pdf', '.doc', '.docx'];
   const ext = path.extname(file.originalname).toLowerCase();
-  
+
   if (allowedExtensions.includes(ext)) {
     cb(null, true);
   } else {
@@ -32,11 +32,37 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({
+const multerInstance = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: fileFilter,
 });
+
+/**
+ * Express 5 + Multer 2 compatibility wrapper.
+ * Wraps a multer middleware in a Promise so Express 5's async error handling works correctly.
+ */
+const wrapMulter = (multerMiddleware) => {
+  return (req, res, next) => {
+    Promise.resolve()
+      .then(() => new Promise((resolve, reject) => {
+        multerMiddleware(req, res, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      }))
+      .then(() => next())
+      .catch((err) => next(err));
+  };
+};
+
+// Wrapped upload helpers for Express 5 compatibility
+const upload = {
+  single: (fieldName) => wrapMulter(multerInstance.single(fieldName)),
+  fields: (fields) => wrapMulter(multerInstance.fields(fields)),
+  array: (fieldName, maxCount) => wrapMulter(multerInstance.array(fieldName, maxCount)),
+  none: () => wrapMulter(multerInstance.none()),
+};
 
 // Helper function to upload file (Cloudinary or Local fallback)
 const handleUpload = async (file) => {
