@@ -1,0 +1,55 @@
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
+
+const connectDB = require('./config/db');
+
+// Import routes
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const applicationRoutes = require('./routes/applicationRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
+
+// Connect to Database
+connectDB();
+
+const app = express();
+
+// Middlewares
+app.use(cors({
+  origin: process.env.CLIENT_URL || '*',
+  credentials: true
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve Static Uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Mount API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+
+// Base route
+app.get('/', (req, res) => {
+  res.json({ message: 'Freelance Marketplace API is running...' });
+});
+
+// Global Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error('Unhandled Server Error:', err.stack);
+  res.status(err.status || 500).json({
+    message: err.message || 'An unexpected server error occurred',
+    error: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+  });
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+});

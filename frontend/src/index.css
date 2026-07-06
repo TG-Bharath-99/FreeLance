@@ -1,0 +1,333 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300 font-sans antialiased overflow-x-hidden;
+  }
+  body.dark {
+    @apply bg-slate-950 text-slate-100;
+  }
+}
+
+/* ============================
+   Custom premium scrollbars
+   ============================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-slate-600;
+}
+
+/* ============================
+   Glassmorphism
+   ============================ */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.dark .glass-card {
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ============================
+   Gradient backgrounds
+   ============================ */
+.gradient-bg {
+  position: relative;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(139, 92, 246, 0.12), transparent 50%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(79, 70, 229, 0.10), transparent 50%),
+    radial-gradient(ellipse 70% 60% at 50% 80%, rgba(16, 185, 129, 0.06), transparent 50%);
+}
+
+.dark .gradient-bg {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(139, 92, 246, 0.08), transparent 50%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(79, 70, 229, 0.06), transparent 50%),
+    radial-gradient(ellipse 70% 60% at 50% 80%, rgba(16, 185, 129, 0.03), transparent 50%);
+}
+
+.gradient-mesh {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-mesh::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle 600px at 10% 20%, rgba(139, 92, 246, 0.15), transparent),
+    radial-gradient(circle 500px at 90% 30%, rgba(79, 70, 229, 0.10), transparent),
+    radial-gradient(circle 400px at 50% 80%, rgba(16, 185, 129, 0.08), transparent),
+    radial-gradient(circle 300px at 70% 60%, rgba(245, 158, 11, 0.05), transparent);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dark .gradient-mesh::before {
+  background:
+    radial-gradient(circle 600px at 10% 20%, rgba(139, 92, 246, 0.08), transparent),
+    radial-gradient(circle 500px at 90% 30%, rgba(79, 70, 229, 0.05), transparent),
+    radial-gradient(circle 400px at 50% 80%, rgba(16, 185, 129, 0.04), transparent),
+    radial-gradient(circle 300px at 70% 60%, rgba(245, 158, 11, 0.02), transparent);
+}
+
+/* ============================
+   Animated floating orbs
+   ============================ */
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -40px) scale(1.05); }
+  50% { transform: translate(-20px, 20px) scale(0.95); }
+  75% { transform: translate(15px, 35px) scale(1.02); }
+}
+
+@keyframes float-slower {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-40px, -30px) scale(1.08); }
+  66% { transform: translate(25px, 40px) scale(0.96); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.15); }
+}
+
+.floating-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.floating-orb-1 {
+  width: 400px;
+  height: 400px;
+  background: rgba(139, 92, 246, 0.2);
+  top: -10%;
+  right: -5%;
+  animation: float-slow 20s ease-in-out infinite;
+}
+
+.floating-orb-2 {
+  width: 350px;
+  height: 350px;
+  background: rgba(79, 70, 229, 0.15);
+  bottom: 10%;
+  left: -8%;
+  animation: float-slower 25s ease-in-out infinite;
+}
+
+.floating-orb-3 {
+  width: 250px;
+  height: 250px;
+  background: rgba(16, 185, 129, 0.12);
+  top: 50%;
+  left: 50%;
+  animation: float-slow 18s ease-in-out infinite reverse;
+}
+
+.dark .floating-orb-1 {
+  background: rgba(139, 92, 246, 0.1);
+}
+.dark .floating-orb-2 {
+  background: rgba(79, 70, 229, 0.08);
+}
+.dark .floating-orb-3 {
+  background: rgba(16, 185, 129, 0.06);
+}
+
+/* ============================
+   Card hover effects
+   ============================ */
+.card-premium {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 40px -12px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(139, 92, 246, 0.1);
+}
+
+.dark .card-premium {
+  border: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.dark .card-premium:hover {
+  box-shadow:
+    0 20px 40px -12px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(139, 92, 246, 0.15);
+}
+
+/* ============================
+   Gradient text
+   ============================ */
+.gradient-text {
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-hero {
+  background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 40%, #a78bfa 70%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.light .gradient-text-hero,
+:root:not(.dark) .gradient-text-hero {
+  background: linear-gradient(135deg, #1e293b 0%, #7c3aed 50%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================
+   Shimmer animation for skeletons
+   ============================ */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.1) 25%,
+    rgba(148, 163, 184, 0.2) 50%,
+    rgba(148, 163, 184, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.dark .shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(51, 65, 85, 0.3) 25%,
+    rgba(71, 85, 105, 0.4) 50%,
+    rgba(51, 65, 85, 0.3) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ============================
+   Glow ring for inputs on focus
+   ============================ */
+.input-glow:focus {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15), 0 0 20px -5px rgba(139, 92, 246, 0.1);
+}
+
+.dark .input-glow:focus {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2), 0 0 20px -5px rgba(139, 92, 246, 0.15);
+}
+
+/* ============================
+   Gradient border effect
+   ============================ */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.1), rgba(16, 185, 129, 0.2));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ============================
+   Button glow
+   ============================ */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 8px 30px -6px rgba(124, 58, 237, 0.4);
+}
+
+/* ============================
+   Animated counter glow
+   ============================ */
+@keyframes counter-glow {
+  0%, 100% { text-shadow: 0 0 20px rgba(139, 92, 246, 0.1); }
+  50% { text-shadow: 0 0 30px rgba(139, 92, 246, 0.3); }
+}
+
+.stat-number {
+  animation: counter-glow 3s ease-in-out infinite;
+}
+
+/* ============================
+   Animated gradient line
+   ============================ */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #7c3aed, #6366f1, #10b981, transparent);
+  background-size: 200% auto;
+  animation: gradient-shift 4s linear infinite;
+}
