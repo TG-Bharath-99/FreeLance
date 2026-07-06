@@ -26,7 +26,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              The premier freelance hub connecting elite creators with visionary clients globally. Built for developers, designers, and scaling companies.
+              The premier freelance hub connecting elite creators with visionary clients globally. Designed & Developed by Bharath.
             </p>
             <div className="flex space-x-2">
               {[
@@ -127,7 +127,7 @@ const Footer = () => {
 
         <div className="mt-14 pt-8 border-t border-slate-200/50 dark:border-slate-800/30 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
-            &copy; {new Date().getFullYear()} LancerFlow Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} LancerFlow Inc. Portfolio Project by Bharath.
           </p>
           <div className="flex items-center space-x-6">
             {['Privacy Policy', 'Terms of Service', 'Trust & Safety'].map((item) => (

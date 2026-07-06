@@ -1,35 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Code, Laptop, PenTool, Layout, Database, Terminal, ArrowRight, 
-  CheckCircle2, Users, Star, MessageSquare, ChevronDown, ChevronUp, Mail, Phone, MapPin, Sparkles, Zap, Globe
+  CheckCircle2, Users, Star, MessageSquare, ChevronDown, ChevronUp, Mail, Phone, MapPin, Sparkles, Zap, Globe, Briefcase, Clock
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import api from '../services/api';
 
 const LandingPage = () => {
   const [activeFaq, setActiveFaq] = useState(null);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [publicData, setPublicData] = useState({ stats: null, categories: [], latestProjects: [] });
+  const [loading, setLoading] = useState(true);
 
-  const categories = [
-    { name: 'Software Development', icon: Code, count: '1,240 open projects', color: 'from-blue-500 to-indigo-600', bg: 'bg-blue-500/8 dark:bg-blue-500/5' },
-    { name: 'UI/UX Design', icon: PenTool, count: '850 open projects', color: 'from-purple-500 to-pink-600', bg: 'bg-purple-500/8 dark:bg-purple-500/5' },
-    { name: 'Mobile App Development', icon: Laptop, count: '620 open projects', color: 'from-emerald-500 to-teal-600', bg: 'bg-emerald-500/8 dark:bg-emerald-500/5' },
-    { name: 'AI & Data Science', icon: Database, count: '430 open projects', color: 'from-amber-500 to-orange-600', bg: 'bg-amber-500/8 dark:bg-amber-500/5' },
-    { name: 'Technical Writing', icon: Layout, count: '290 open projects', color: 'from-cyan-500 to-blue-600', bg: 'bg-cyan-500/8 dark:bg-cyan-500/5' },
-    { name: 'DevOps & Security', icon: Terminal, count: '310 open projects', color: 'from-rose-500 to-pink-600', bg: 'bg-rose-500/8 dark:bg-rose-500/5' },
-  ];
+  useEffect(() => {
+    const fetchPublicData = async () => {
+      try {
+        const response = await api.get('/public/stats');
+        setPublicData(response.data);
+      } catch (error) {
+        console.error('Error fetching public stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPublicData();
+  }, []);
+
+  const getCategoryIcon = (categoryName) => {
+    const lower = categoryName.toLowerCase();
+    if (lower.includes('software') || lower.includes('web')) return Code;
+    if (lower.includes('design') || lower.includes('ui')) return PenTool;
+    if (lower.includes('mobile') || lower.includes('app')) return Laptop;
+    if (lower.includes('data') || lower.includes('ai')) return Database;
+    if (lower.includes('writing') || lower.includes('content')) return Layout;
+    if (lower.includes('devops') || lower.includes('security')) return Terminal;
+    return Briefcase;
+  };
+
+  const getCategoryColor = (idx) => {
+    const colors = [
+      { color: 'from-blue-500 to-indigo-600', bg: 'bg-blue-500/8 dark:bg-blue-500/5' },
+      { color: 'from-purple-500 to-pink-600', bg: 'bg-purple-500/8 dark:bg-purple-500/5' },
+      { color: 'from-emerald-500 to-teal-600', bg: 'bg-emerald-500/8 dark:bg-emerald-500/5' },
+      { color: 'from-amber-500 to-orange-600', bg: 'bg-amber-500/8 dark:bg-amber-500/5' },
+      { color: 'from-cyan-500 to-blue-600', bg: 'bg-cyan-500/8 dark:bg-cyan-500/5' },
+      { color: 'from-rose-500 to-pink-600', bg: 'bg-rose-500/8 dark:bg-rose-500/5' },
+    ];
+    return colors[idx % colors.length];
+  };
 
   const steps = [
     { title: 'Create your profile', desc: 'Sign up as a freelancer or client. Set up your bio, portfolio, and skills to highlight your expertise.', icon: Users, num: '01' },
     { title: 'Post or Apply to projects', desc: 'Clients publish details and budget scopes. Freelancers submit proposals with custom pricing and delivery windows.', icon: Zap, num: '02' },
     { title: 'Collaborate and Get Paid', desc: 'Secure project tracking and application approvals lock contracts into active delivery states.', icon: CheckCircle2, num: '03' },
-  ];
-
-  const testimonials = [
-    { quote: "LancerFlow revolutionized how we scale our tech stack. We found an expert React engineer in under 48 hours.", author: "Sarah Jenkins", role: "CTO, CloudScale Inc", rating: 5 },
-    { quote: "As a designer, I get access to premium clients without the race-to-the-bottom bidding. The platform pays for itself.", author: "Marcus Thorne", role: "Product Designer", rating: 5 },
-    { quote: "The proposal workflow is crystal clear. I love the dashboard tracking and automatic project status updates.", author: "Elena Rostova", role: "Fullstack Architect", rating: 5 },
   ];
 
   const faqs = [
@@ -79,7 +104,7 @@ const LandingPage = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary-500/20 bg-primary-500/8 text-primary-600 dark:text-primary-400 text-xs font-bold mb-8 backdrop-blur-sm shadow-sm"
           >
             <Sparkles className="h-3.5 w-3.5" />
-            Trusted by 200K+ professionals worldwide
+            Designed & Developed by Bharath
           </motion.div>
 
           <motion.h1
@@ -138,17 +163,17 @@ const LandingPage = () => {
             className="mt-20 w-full grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6"
           >
             {[
-              { value: '$45M+', label: 'Total Paid to Creators', color: 'text-primary-600 dark:text-primary-400' },
-              { value: '200k+', label: 'Contracts Completed', color: 'text-indigo-500 dark:text-indigo-400' },
-              { value: '99.9%', label: 'Client Satisfaction', color: 'text-emerald-500 dark:text-emerald-400' },
-              { value: '120+', label: 'Countries Active', color: 'text-amber-500 dark:text-amber-400' },
+              { value: publicData.stats?.totalDevelopers || 0, label: 'Registered Developers', color: 'text-primary-600 dark:text-primary-400' },
+              { value: publicData.stats?.totalClients || 0, label: 'Registered Clients', color: 'text-indigo-500 dark:text-indigo-400' },
+              { value: publicData.stats?.totalProjects || 0, label: 'Total Projects Posted', color: 'text-emerald-500 dark:text-emerald-400' },
+              { value: publicData.stats?.totalApplications || 0, label: 'Applications Submitted', color: 'text-amber-500 dark:text-amber-400' },
             ].map((stat, idx) => (
               <motion.div
                 key={idx}
                 whileHover={{ y: -2 }}
                 className="p-5 sm:p-6 rounded-2xl border border-slate-200/40 dark:border-slate-800/20 bg-white/50 dark:bg-slate-900/30 backdrop-blur-md shadow-sm card-premium"
               >
-                <h3 className={`text-2xl sm:text-3xl font-extrabold ${stat.color} stat-number`}>{stat.value}</h3>
+                <h3 className={`text-2xl sm:text-3xl font-extrabold ${stat.color} stat-number`}>{loading ? '-' : stat.value}</h3>
                 <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-semibold">{stat.label}</p>
               </motion.div>
             ))}
@@ -184,32 +209,39 @@ const LandingPage = () => {
             viewport={{ once: true, margin: "-80px" }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
           >
-            {categories.map((cat, idx) => {
-              const IconComp = cat.icon;
-              return (
-                <motion.div
-                  key={idx}
-                  variants={cardVariants}
-                  whileHover={{ y: -4 }}
-                  className="group p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800/30 bg-white dark:bg-slate-900/60 shadow-sm card-premium flex items-start gap-4"
-                >
-                  <div className={`p-3 rounded-xl bg-gradient-to-br ${cat.color} text-white flex-shrink-0 shadow-md group-hover:shadow-lg transition-shadow`}>
-                    <IconComp className="h-5 w-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-slate-800 dark:text-slate-100">{cat.name}</h3>
-                    <p className="text-xs text-slate-400 mt-0.5 font-medium">{cat.count}</p>
-                    <Link
-                      to={`/projects?category=${encodeURIComponent(cat.name)}`}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-primary-600 dark:text-primary-400 mt-3 group/link hover:gap-2 transition-all"
-                    >
-                      View Jobs
-                      <ArrowRight className="h-3 w-3 transition-transform group-hover/link:translate-x-0.5" />
-                    </Link>
-                  </div>
-                </motion.div>
-              );
-            })}
+            {loading ? (
+              <p className="text-center text-slate-500 col-span-full">Loading categories...</p>
+            ) : publicData.categories.length === 0 ? (
+              <p className="text-center text-slate-500 col-span-full">No projects available.</p>
+            ) : (
+              publicData.categories.map((cat, idx) => {
+                const IconComp = getCategoryIcon(cat.name);
+                const theme = getCategoryColor(idx);
+                return (
+                  <motion.div
+                    key={idx}
+                    variants={cardVariants}
+                    whileHover={{ y: -4 }}
+                    className="group p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800/30 bg-white dark:bg-slate-900/60 shadow-sm card-premium flex items-start gap-4"
+                  >
+                    <div className={`p-3 rounded-xl bg-gradient-to-br ${theme.color} text-white flex-shrink-0 shadow-md group-hover:shadow-lg transition-shadow`}>
+                      <IconComp className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-slate-800 dark:text-slate-100">{cat.name}</h3>
+                      <p className="text-xs text-slate-400 mt-0.5 font-medium">{cat.count} open {cat.count === 1 ? 'project' : 'projects'}</p>
+                      <Link
+                        to={`/projects?category=${encodeURIComponent(cat.name)}`}
+                        className="inline-flex items-center gap-1 text-xs font-bold text-primary-600 dark:text-primary-400 mt-3 group/link hover:gap-2 transition-all"
+                      >
+                        View Jobs
+                        <ArrowRight className="h-3 w-3 transition-transform group-hover/link:translate-x-0.5" />
+                      </Link>
+                    </div>
+                  </motion.div>
+                );
+              })
+            )}
           </motion.div>
         </div>
       </section>
@@ -235,7 +267,6 @@ const LandingPage = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-            {/* Connector line (desktop) */}
             <div className="hidden md:block absolute top-16 left-[20%] right-[20%] h-0.5 bg-gradient-to-r from-primary-500/30 via-indigo-500/30 to-emerald-500/30" />
             
             {steps.map((step, idx) => {
@@ -266,7 +297,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ==================== TESTIMONIALS ==================== */}
+      {/* ==================== RECENT PROJECTS ==================== */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-white to-slate-50 dark:from-slate-950 dark:to-slate-950 pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -277,13 +308,13 @@ const LandingPage = () => {
             className="text-center max-w-2xl mx-auto mb-16"
           >
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/8 dark:bg-amber-500/5 text-amber-600 dark:text-amber-400 text-xs font-bold mb-4">
-              <Star className="h-3 w-3 fill-current" /> 4.9/5 Rating
+              <Star className="h-3 w-3 fill-current" /> Latest Opportunities
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-              Loved by Professionals
+              Latest Active Projects
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-4 leading-relaxed">
-              Hear from startup founders and elite remote engineers using our platform.
+              Find the perfect project that matches your skills and start collaborating.
             </p>
           </motion.div>
 
@@ -294,30 +325,54 @@ const LandingPage = () => {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
           >
-            {testimonials.map((t, idx) => (
-              <motion.div
-                key={idx}
-                variants={cardVariants}
-                whileHover={{ y: -4 }}
-                className="p-7 rounded-3xl border border-slate-200/50 dark:border-slate-800/30 bg-white dark:bg-slate-900/60 shadow-sm card-premium space-y-5"
-              >
-                <div className="flex text-amber-400 gap-0.5">
-                  {[...Array(t.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
-                  ))}
-                </div>
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic">"{t.quote}"</p>
-                <div className="flex items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-800/40">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-primary-500 to-indigo-500 flex items-center justify-center font-bold text-white text-sm shadow-md">
-                    {t.author.charAt(0)}
+            {loading ? (
+              <p className="text-center text-slate-500 col-span-full">Loading projects...</p>
+            ) : publicData.latestProjects.length === 0 ? (
+              <p className="text-center text-slate-500 col-span-full">No active projects available yet.</p>
+            ) : (
+              publicData.latestProjects.map((project, idx) => (
+                <motion.div
+                  key={project._id}
+                  variants={cardVariants}
+                  whileHover={{ y: -4 }}
+                  className="p-6 rounded-3xl border border-slate-200/50 dark:border-slate-800/30 bg-white dark:bg-slate-900/60 shadow-sm card-premium flex flex-col h-full"
+                >
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="inline-block px-2.5 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                        {project.category}
+                      </span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm">
+                        ${project.budget}
+                      </span>
+                    </div>
+                    <Link to={`/projects/${project._id}`} className="block mb-2 group-hover:text-primary-600 transition-colors">
+                      <h3 className="font-bold text-lg text-slate-900 dark:text-white line-clamp-2">
+                        {project.title}
+                      </h3>
+                    </Link>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-4">
+                      {project.description}
+                    </p>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">{t.author}</h4>
-                    <p className="text-xs text-slate-400 font-medium">{t.role}</p>
+                  
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center font-bold text-slate-600 dark:text-slate-300 text-xs">
+                        {project.client?.name?.charAt(0) || 'C'}
+                      </div>
+                      <span className="text-xs font-medium text-slate-600 dark:text-slate-300 truncate max-w-[100px]">
+                        {project.client?.name || 'Client'}
+                      </span>
+                    </div>
+                    <span className="text-xs text-slate-400 flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {new Date(project.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))
+            )}
           </motion.div>
         </div>
       </section>
@@ -406,9 +461,8 @@ const LandingPage = () => {
             </p>
             <div className="space-y-4 pt-4">
               {[
-                { icon: Mail, text: 'support@lancerflow.com', color: 'text-primary-500' },
-                { icon: Phone, text: '+1 (888) 555-FLOW', color: 'text-indigo-500' },
-                { icon: MapPin, text: 'One Infinite Loop, Cupertino, CA', color: 'text-emerald-500' },
+                { icon: Mail, text: 'ummadibharath07@gmail.com', color: 'text-primary-500' },
+                { icon: MapPin, text: 'SASTRA Deemed University, Tamil Nadu, India', color: 'text-emerald-500' },
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
                   <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800/50">

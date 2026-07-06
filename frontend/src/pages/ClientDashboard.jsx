@@ -180,7 +180,9 @@ const ClientDashboard = () => {
                       <span className="text-slate-300 dark:text-slate-600">•</span>
                       <span>{proj.category}</span>
                       <span className="text-slate-300 dark:text-slate-600">•</span>
-                      <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {proj.applicationsCount}</span>
+                      <Link to={`/client-applications/${proj._id}`} className="flex items-center gap-1 hover:text-primary-600 transition-colors">
+                        <Users className="h-3 w-3" /> {proj.applicationsCount} Applications
+                      </Link>
                     </div>
                   </div>
                   

@@ -15,6 +15,10 @@ import ClientDashboard from './pages/ClientDashboard';
 import FreelancerDashboard from './pages/FreelancerDashboard';
 import PostProject from './pages/PostProject';
 import Profile from './pages/Profile';
+import MyApplications from './pages/MyApplications';
+import ClientApplications from './pages/ClientApplications';
+import Chat from './pages/Chat';
+import Payment from './pages/Payment';
 
 const App = () => {
   return (
@@ -53,6 +57,26 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/client-applications/:projectId"
+              element={
+                <ProtectedRoute>
+                  <RoleRoute requiredRole="client">
+                    <ClientApplications />
+                  </RoleRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payment/:id"
+              element={
+                <ProtectedRoute>
+                  <RoleRoute requiredRole="client">
+                    <Payment />
+                  </RoleRoute>
+                </ProtectedRoute>
+              }
+            />
 
             {/* Freelancer-Only Protected Routes */}
             <Route
@@ -65,13 +89,31 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/my-applications"
+              element={
+                <ProtectedRoute>
+                  <RoleRoute requiredRole="freelancer">
+                    <MyApplications />
+                  </RoleRoute>
+                </ProtectedRoute>
+              }
+            />
 
-            {/* Shared Profile Route */}
+            {/* Shared Protected Routes */}
             <Route
               path="/profile"
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chat/:id"
+              element={
+                <ProtectedRoute>
+                  <Chat />
                 </ProtectedRoute>
               }
             />

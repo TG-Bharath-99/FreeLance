@@ -221,18 +221,22 @@ const FreelancerDashboard = () => {
       </div>
 
       {/* Recommended Projects */}
-      {stats.recommendedProjects && stats.recommendedProjects.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary-500" />
-              Recommended for You
-            </h2>
-            <Link to="/projects" className="inline-flex items-center gap-1 text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline">
-              View all <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-primary-500" />
+            Recommended for You
+          </h2>
+          <Link to="/projects" className="inline-flex items-center gap-1 text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline">
+            View all <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
 
+        {(!stats.recommendedProjects || stats.recommendedProjects.length === 0) ? (
+          <div className="p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800/30 bg-white dark:bg-slate-900 text-center text-slate-500 dark:text-slate-400">
+            No projects available yet. Check back soon.
+          </div>
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {stats.recommendedProjects.slice(0, 3).map((proj, idx) => (
               <motion.div
@@ -273,8 +277,8 @@ const FreelancerDashboard = () => {
               </motion.div>
             ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

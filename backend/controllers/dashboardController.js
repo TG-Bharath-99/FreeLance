@@ -39,16 +39,28 @@ exports.getDashboardStats = async (req, res) => {
         value: categoryMap[cat],
       }));
 
-      // Analytics: Monthly postings (mock / real timeline)
-      // Since it's a new database, we'll return actual count + mock entries for professional visual state
-      const monthlyPostings = [
-        { month: 'Jan', projects: 2 },
-        { month: 'Feb', projects: 4 },
-        { month: 'Mar', projects: 1 },
-        { month: 'Apr', projects: 5 },
-        { month: 'May', projects: 3 },
-        { month: 'Jun', projects: activeProjects },
-      ];
+      // Analytics: Monthly postings (real timeline)
+      const monthlyMap = {};
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      
+      clientProjects.forEach((p) => {
+        const month = p.createdAt.getMonth();
+        const monthName = monthNames[month];
+        monthlyMap[monthName] = (monthlyMap[monthName] || 0) + 1;
+      });
+
+      // Ensure last 6 months have entries
+      const monthlyPostings = [];
+      const currentMonth = new Date().getMonth();
+      for (let i = 5; i >= 0; i--) {
+        let m = currentMonth - i;
+        if (m < 0) m += 12;
+        const monthName = monthNames[m];
+        monthlyPostings.push({
+          month: monthName,
+          projects: monthlyMap[monthName] || 0,
+        });
+      }
 
       return res.json({
         totalProjects,
