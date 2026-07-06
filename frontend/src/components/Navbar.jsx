@@ -49,11 +49,13 @@ const Navbar = () => {
   const freelancerLinks = [
     { name: 'Dashboard', path: '/freelancer-dashboard' },
     { name: 'Browse Projects', path: '/projects' },
+    { name: 'Active Projects', path: '/active-projects' },
     { name: 'My Applications', path: '/my-applications' },
   ];
 
   const clientLinks = [
     { name: 'Dashboard', path: '/client-dashboard' },
+    { name: 'My Projects', path: '/my-projects' },
     { name: 'Post a Project', path: '/post-project' },
   ];
 

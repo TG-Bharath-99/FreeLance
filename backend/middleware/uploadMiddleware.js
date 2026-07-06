@@ -22,12 +22,12 @@ const storage = multer.diskStorage({
 
 // File Filter
 const fileFilter = (req, file, cb) => {
-  const allowedExtensions = ['.png', '.jpg', '.jpeg', '.pdf', '.doc', '.docx'];
+  const allowedExtensions = ['.png', '.jpg', '.jpeg', '.pdf', '.doc', '.docx', '.zip', '.rar'];
   const ext = path.extname(file.originalname).toLowerCase();
   if (allowedExtensions.includes(ext)) {
     cb(null, true);
   } else {
-    cb(new Error('Unsupported file type. Only images (PNG, JPG, JPEG) and documents (PDF, DOC, DOCX) are allowed.'), false);
+    cb(new Error('Unsupported file type. Only images, documents, and archives (ZIP, RAR) are allowed.'), false);
   }
 };
 

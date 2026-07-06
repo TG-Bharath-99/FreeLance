@@ -167,9 +167,10 @@ exports.updateApplicationStatus = async (req, res) => {
     application.status = status;
     await application.save();
 
-    // If accepted, close the project and auto-reject other applicants
+    // If accepted, set project to in-progress, assign developer, and auto-reject other applicants
     if (status === 'accepted') {
-      project.status = 'closed';
+      project.status = 'in-progress';
+      project.assignedDeveloper = application.freelancer;
       await project.save();
 
       // Automatically reject other pending applications for this project

@@ -17,6 +17,8 @@ import PostProject from './pages/PostProject';
 import Profile from './pages/Profile';
 import MyApplications from './pages/MyApplications';
 import ClientApplications from './pages/ClientApplications';
+import ActiveProjects from './pages/ActiveProjects';
+import MyProjects from './pages/MyProjects';
 import Chat from './pages/Chat';
 import Payment from './pages/Payment';
 
@@ -53,6 +55,16 @@ const App = () => {
                 <ProtectedRoute>
                   <RoleRoute requiredRole="client">
                     <PostProject />
+                  </RoleRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-projects"
+              element={
+                <ProtectedRoute>
+                  <RoleRoute requiredRole="client">
+                    <MyProjects />
                   </RoleRoute>
                 </ProtectedRoute>
               }
@@ -95,6 +107,16 @@ const App = () => {
                 <ProtectedRoute>
                   <RoleRoute requiredRole="freelancer">
                     <MyApplications />
+                  </RoleRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/active-projects"
+              element={
+                <ProtectedRoute>
+                  <RoleRoute requiredRole="freelancer">
+                    <ActiveProjects />
                   </RoleRoute>
                 </ProtectedRoute>
               }

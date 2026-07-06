@@ -13,6 +13,7 @@ const applicationRoutes = require('./routes/applicationRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const publicRoutes = require('./routes/publicRoutes');
+const submissionRoutes = require('./routes/submissionRoutes');
 
 // Connect to Database
 connectDB();
@@ -61,6 +62,7 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api/submissions', submissionRoutes);
 
 // Base route
 app.get('/', (req, res) => {

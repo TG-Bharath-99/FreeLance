@@ -1,6 +1,7 @@
 const Project = require('../models/Project');
 const Application = require('../models/Application');
 const User = require('../models/User');
+const Submission = require('../models/Submission');
 
 // @desc    Get dashboard metrics based on user role
 // @route   GET /api/dashboard/stats
@@ -17,10 +18,14 @@ exports.getDashboardStats = async (req, res) => {
       const activeProjects = clientProjects.filter((p) => p.status === 'open').length;
       const closedProjects = clientProjects.filter((p) => p.status === 'closed').length;
       const completedProjects = clientProjects.filter((p) => p.status === 'completed').length;
+      const inProgressProjects = clientProjects.filter((p) => p.status === 'in-progress').length;
+      const submittedProjects = clientProjects.filter((p) => p.status === 'submitted').length;
 
       // Get all application IDs for client's projects
       const projectIds = clientProjects.map((p) => p._id);
       const totalApplications = await Application.countDocuments({ project: { $in: projectIds } });
+
+      const pendingReviews = await Submission.countDocuments({ project: { $in: projectIds }, status: 'submitted' });
 
       // Recent Activity: Last 5 applications received
       const recentActivity = await Application.find({ project: { $in: projectIds } })
@@ -67,7 +72,10 @@ exports.getDashboardStats = async (req, res) => {
         activeProjects,
         closedProjects,
         completedProjects,
+        inProgressProjects,
+        submittedProjects,
         totalApplications,
+        pendingReviews,
         recentActivity,
         analytics: {
           categoryData,
@@ -80,6 +88,24 @@ exports.getDashboardStats = async (req, res) => {
       const pendingApplications = await Application.countDocuments({ freelancer: req.user.id, status: 'pending' });
       const acceptedApplications = await Application.countDocuments({ freelancer: req.user.id, status: 'accepted' });
       const rejectedApplications = await Application.countDocuments({ freelancer: req.user.id, status: 'rejected' });
+
+      // Add new stats based on Submission and Project models
+      const mySubmissions = await Submission.find({ developer: req.user.id }).populate('project');
+      const submittedProjects = mySubmissions.filter(s => s.status === 'submitted' || s.status === 'changes-requested').length;
+      const activeProjects = await Project.countDocuments({ assignedDeveloper: req.user.id, status: 'in-progress' });
+      const completedProjects = await Project.countDocuments({ assignedDeveloper: req.user.id, status: 'completed' });
+      
+      const paymentStats = {
+        paid: mySubmissions.filter(s => s.paymentStatus === 'paid').length,
+        unpaid: mySubmissions.filter(s => s.paymentStatus === 'unpaid' && s.status === 'approved').length
+      };
+
+      const totalEarnings = mySubmissions
+        .filter(s => s.paymentStatus === 'paid')
+        .reduce((sum, s) => {
+          const budget = s.application?.expectedBudget || s.project?.budget || 0;
+          return sum + budget;
+        }, 0);
 
       // Recent Activity: Last 5 application actions
       const recentActivity = await Application.find({ freelancer: req.user.id })
@@ -134,6 +160,11 @@ exports.getDashboardStats = async (req, res) => {
         pendingApplications,
         acceptedApplications,
         rejectedApplications,
+        activeProjects,
+        submittedProjects,
+        completedProjects,
+        paymentStats,
+        totalEarnings,
         recentActivity,
         recommendedProjects,
         profileCompletion,

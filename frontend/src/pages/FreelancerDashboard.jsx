@@ -79,10 +79,11 @@ const FreelancerDashboard = () => {
   };
 
   const statCards = [
-    { label: 'Total Applications', value: stats.totalApplications, icon: FileText, color: 'from-primary-500 to-indigo-500' },
-    { label: 'Pending', value: stats.pendingApplications, icon: Clock, color: 'from-amber-500 to-orange-500' },
-    { label: 'Accepted', value: stats.acceptedApplications, icon: CheckCircle, color: 'from-emerald-500 to-teal-500' },
-    { label: 'Rejected', value: stats.rejectedApplications, icon: XCircle, color: 'from-rose-500 to-pink-500' },
+    { label: 'Earnings', value: `$${stats.totalEarnings?.toLocaleString() || 0}`, icon: DollarSign, color: 'from-emerald-500 to-teal-500' },
+    { label: 'Active Projects', value: stats.activeProjectsCount || 0, icon: Briefcase, color: 'from-blue-500 to-cyan-500' },
+    { label: 'Completed', value: stats.completedProjectsCount || 0, icon: CheckCircle, color: 'from-indigo-500 to-blue-500' },
+    { label: 'Total Apps', value: stats.totalApplications, icon: FileText, color: 'from-primary-500 to-indigo-500' },
+    { label: 'Pending Apps', value: stats.pendingApplications, icon: Clock, color: 'from-amber-500 to-orange-500' },
   ];
 
   return (
@@ -126,7 +127,7 @@ const FreelancerDashboard = () => {
       </motion.div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         {statCards.map((stat, idx) => {
           const StatIcon = stat.icon;
           return (

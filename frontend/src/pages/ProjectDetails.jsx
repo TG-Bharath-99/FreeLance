@@ -20,6 +20,7 @@ const ProjectDetails = () => {
   const [project, setProject] = useState(null);
   const [applications, setApplications] = useState([]);
   const [userApplication, setUserApplication] = useState(null);
+  const [submission, setSubmission] = useState(null);
   const [loading, setLoading] = useState(true);
   
   // Modal toggle
@@ -34,6 +35,15 @@ const ProjectDetails = () => {
     try {
       const projRes = await api.get(`/projects/${id}`);
       setProject(projRes.data);
+
+      if (['in-progress', 'submitted', 'completed'].includes(projRes.data.status)) {
+        try {
+          const subRes = await api.get(`/submissions/project/${id}`);
+          setSubmission(subRes.data);
+        } catch (subErr) {
+          if (subErr.response?.status !== 404) console.error('Submission fetch error:', subErr);
+        }
+      }
 
       if (isAuthenticated) {
         // If owner client, fetch applications
@@ -157,6 +167,8 @@ const ProjectDetails = () => {
   const getStatusBadge = (status) => {
     const classes = {
       open: 'bg-gradient-to-r from-indigo-500/10 to-primary-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20',
+      'in-progress': 'bg-gradient-to-r from-blue-500/10 to-cyan-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20',
+      submitted: 'bg-gradient-to-r from-amber-500/10 to-orange-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
       closed: 'bg-slate-500/10 text-slate-500 border border-slate-500/20',
       completed: 'bg-gradient-to-r from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
     };
@@ -266,6 +278,45 @@ const ProjectDetails = () => {
               </div>
             </div>
           </motion.div>
+
+          {/* Submission Panel (Owner) */}
+          {isOwner && submission && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Project Submission</h2>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-6 rounded-3xl border-2 border-primary-500/30 bg-primary-50/50 dark:bg-primary-950/10 shadow-sm space-y-4"
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-bold text-slate-900 dark:text-white">{submission.developer?.name || 'Developer'}</h3>
+                    <p className="text-xs text-slate-500">Submitted on {new Date(submission.submittedAt).toLocaleDateString()}</p>
+                  </div>
+                  <span className={`px-3 py-1 text-xs rounded-full font-bold uppercase ${
+                    submission.status === 'submitted' ? 'bg-amber-500/10 text-amber-600' :
+                    submission.status === 'approved' ? 'bg-emerald-500/10 text-emerald-600' :
+                    'bg-rose-500/10 text-rose-600'
+                  }`}>
+                    {submission.status.replace('-', ' ')}
+                  </span>
+                </div>
+                
+                <div className="text-sm bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                  <p className="text-slate-700 dark:text-slate-300 whitespace-pre-line">{submission.notes || 'No notes provided.'}</p>
+                </div>
+                
+                <div className="flex gap-4 pt-2">
+                  <Link
+                    to={`/client-applications/${project._id}`}
+                    className="w-full py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white font-bold rounded-xl text-sm shadow-md transition-all text-center btn-glow"
+                  >
+                    Review Submission & Deliverables
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
+          )}
 
           {/* Application Review Panel (Owner) */}
           {isOwner && (
@@ -415,10 +466,12 @@ const ProjectDetails = () => {
             >
               <h3 className="font-bold text-xs text-slate-500 uppercase tracking-widest">Contract Status</h3>
               <div className="space-y-2">
-                {['open', 'closed', 'completed'].map((status) => {
+                {['open', 'in-progress', 'submitted', 'completed', 'closed'].map((status) => {
                   const isCurrentStatus = project.status === status;
                   const colors = {
                     open: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20',
+                    'in-progress': 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+                    submitted: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
                     closed: 'bg-slate-500/10 text-slate-500 border-slate-500/20',
                     completed: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
                   };

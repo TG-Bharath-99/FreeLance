@@ -44,13 +44,18 @@ const ProjectSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['open', 'closed', 'completed'],
+      enum: ['open', 'in-progress', 'submitted', 'completed', 'closed'],
       default: 'open',
     },
     client: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+    },
+    assignedDeveloper: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
     },
     applicationsCount: {
       type: Number,

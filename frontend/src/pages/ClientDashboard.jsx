@@ -4,7 +4,7 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { 
   Folder, FileText, CheckCircle, Power, Users, PlusCircle, 
-  ArrowRight, Calendar, ExternalLink, RefreshCw, AlertCircle, Sparkles, TrendingUp
+  ArrowRight, Calendar, ExternalLink, RefreshCw, AlertCircle, Sparkles, TrendingUp, Clock, FileCheck
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { StatsSkeleton } from '../components/Skeleton';
@@ -73,9 +73,10 @@ const ClientDashboard = () => {
   const statCards = [
     { label: 'Total Posts', value: stats.totalProjects, icon: Folder, color: 'from-primary-500 to-indigo-500', bg: 'bg-primary-500/8' },
     { label: 'Active', value: stats.activeProjects, icon: Power, color: 'from-indigo-500 to-blue-500', bg: 'bg-indigo-500/8' },
-    { label: 'Closed', value: stats.closedProjects, icon: FileText, color: 'from-slate-500 to-gray-500', bg: 'bg-slate-500/8' },
+    { label: 'In Progress', value: stats.inProgressProjects, icon: Clock, color: 'from-blue-500 to-cyan-500', bg: 'bg-blue-500/8' },
+    { label: 'Pending Review', value: stats.pendingReviews, icon: FileCheck, color: 'from-amber-500 to-orange-500', bg: 'bg-amber-500/8' },
     { label: 'Completed', value: stats.completedProjects, icon: CheckCircle, color: 'from-emerald-500 to-teal-500', bg: 'bg-emerald-500/8' },
-    { label: 'Applicants', value: stats.totalApplications, icon: Users, color: 'from-amber-500 to-orange-500', bg: 'bg-amber-500/8' },
+    { label: 'Applicants', value: stats.totalApplications, icon: Users, color: 'from-slate-500 to-gray-500', bg: 'bg-slate-500/8' },
   ];
 
   return (
@@ -119,7 +120,7 @@ const ClientDashboard = () => {
       </motion.div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         {statCards.map((stat, idx) => {
           const StatIcon = stat.icon;
           return (
@@ -189,7 +190,7 @@ const ClientDashboard = () => {
                   
                   <div className="flex items-center gap-3">
                     <span className={`px-2.5 py-1 text-xs rounded-full font-bold capitalize ${getStatusBadge(proj.status)}`}>
-                      {proj.status}
+                      {proj.status.replace('-', ' ')}
                     </span>
                     <Link
                       to={`/projects/${proj._id}`}
